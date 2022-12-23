@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:an_exercise_timer/src/slider_bloc/slider_cubit.dart';
 import 'package:an_exercise_timer/src/timer_page.dart';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';

@@ -5,7 +5,7 @@ abstract class TimerEvent {
 }
 
 class TimerStarted extends TimerEvent {
-   TimerStarted({ this.duration = 0, required this.incrementing});
+   TimerStarted({ required this.duration, required this.incrementing});
     int duration;
     bool incrementing;
 }

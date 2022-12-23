@@ -2,7 +2,7 @@ part of 'checkbox_cubit.dart';
 
 
 class CheckboxState {
-  bool isChecked = false;
+  bool isChecked;
 
   CheckboxState({required this.isChecked}) {
     if (isChecked) {

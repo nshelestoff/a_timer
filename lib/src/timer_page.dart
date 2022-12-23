@@ -1,4 +1,5 @@
 import 'package:an_exercise_timer/src/checkbox_bloc/checkbox_cubit.dart';
+import 'package:an_exercise_timer/src/slider_bloc/slider_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:an_exercise_timer/src/timer.dart';
@@ -21,6 +22,9 @@ class TimerPage extends StatelessWidget {
         BlocProvider(
           create: (_) => CheckboxCubit(),
         ),
+        BlocProvider(
+          create: (_) => SliderCubit(),
+        )
       ],
       child: TimerView(),
     );
@@ -36,6 +40,7 @@ class TimerView extends StatefulWidget {
 
 class _TimerViewState extends State<TimerView> {
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
+  double _currentSliderValue = 20;
 
   @override
   Widget build(BuildContext context) {
@@ -80,7 +85,25 @@ class _TimerViewState extends State<TimerView> {
                       },
                     );
                   },
-                )
+                ),
+                Visibility(
+                  visible: !(context.read<CheckboxCubit>().state.isChecked),
+                  child: BlocBuilder<SliderCubit, SliderState>(
+                    builder: (context, state) {
+                      return Slider(
+                        value: state.value,
+                        max: 300,
+                        divisions: 10,
+                        label: state.value.round().toString(),
+                        onChanged: (double value) {
+                          setState(() {
+                            context.read<SliderCubit>().changeValue(value);
+                          });
+                        },
+                      );
+                    },
+                  ),
+                ),
               ],
             ),
           ],
@@ -97,14 +120,11 @@ class TimerText extends StatelessWidget {
   Widget build(BuildContext context) {
     final duration = context.select((TimerBloc bloc) => bloc.state.duration);
     final minutesStr =
-    ((duration / 60) % 60).floor().toString().padLeft(2, '0');
+        ((duration / 60) % 60).floor().toString().padLeft(2, '0');
     final secondsStr = (duration % 60).floor().toString().padLeft(2, '0');
     return Text(
-      '$minutesStr:$secondsStr',
-      style: Theme
-          .of(context)
-          .textTheme
-          .headline1,
+      '$duration',
+      style: Theme.of(context).textTheme.headline1,
     );
   }
 }

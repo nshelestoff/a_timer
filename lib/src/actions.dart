@@ -1,4 +1,5 @@
 import 'package:an_exercise_timer/src/checkbox_bloc/checkbox_cubit.dart';
+import 'package:an_exercise_timer/src/slider_bloc/slider_cubit.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -20,7 +21,7 @@ class Actions extends StatelessWidget {
                 child: const Icon(Icons.play_arrow),
                 onPressed: () => context
                     .read<TimerBloc>()
-                    .add(TimerStarted(duration: state.duration, incrementing: context.read<CheckboxCubit>().state.isChecked)),
+                    .add(TimerStarted(duration: context.read<SliderCubit>().state.value.round(), incrementing: context.read<CheckboxCubit>().state.isChecked)),
               ),
             ],
             if (state is TimerRunInProgress) ...[
