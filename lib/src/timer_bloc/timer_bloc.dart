@@ -19,9 +19,12 @@ class TimerBloc extends Bloc<TimerEvent, TimerState> {
     on<TimerResumed>(_onResumed);
     on<TimerReset>(_onReset);
     on<_TimerTicked>(_onTicked);
+    on<TimerUpdated>(_onUpdate);
+
 
     _sliderCubit.stream.listen((event) {
       _duration = _sliderCubit.state.value.round();
+      add(TimerUpdated(_duration));
     });
 
   }
@@ -58,6 +61,7 @@ class TimerBloc extends Bloc<TimerEvent, TimerState> {
     }
   }
 
+
   void _onResumed(TimerResumed resume, Emitter<TimerState> emit) {
     if (state is TimerRunPause) {
       _tickerSubscription?.resume();
@@ -76,5 +80,10 @@ class TimerBloc extends Bloc<TimerEvent, TimerState> {
           ? TimerRunInProgress(event.duration)
           : const TimerRunComplete(),
     );
+  }
+
+  void _onUpdate(TimerUpdated event, Emitter<TimerState> emit) {
+    _tickerSubscription?.cancel();
+    emit(TimerInitial(_duration));
   }
 }

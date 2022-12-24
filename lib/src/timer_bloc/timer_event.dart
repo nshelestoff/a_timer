@@ -14,6 +14,11 @@ class TimerPaused extends TimerEvent {
   const TimerPaused();
 }
 
+class TimerUpdated extends TimerEvent {
+  const TimerUpdated(this.duration);
+  final int duration;
+}
+
 class TimerResumed extends TimerEvent {
   const TimerResumed();
 }
