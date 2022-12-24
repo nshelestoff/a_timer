@@ -8,31 +8,45 @@ import 'actions.dart';
 import 'background.dart';
 import 'timer_bloc/timer_bloc.dart';
 
-class TimerPage extends StatelessWidget {
+class TimerPage extends StatefulWidget {
   const TimerPage({Key? key}) : super(key: key);
   static bool incrementingTimer = true;
+
+  @override
+  State<TimerPage> createState() => _TimerPageState();
+
+}
+
+class _TimerPageState extends State<TimerPage> {
+  late SliderCubit _sliderCubit;
+
+  @override
+  void initState(){
+    _sliderCubit = SliderCubit();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
         BlocProvider(
-          create: (_) => TimerBloc(ticker: Ticker()),
+          create: (_) => TimerBloc(ticker: const Ticker(), sliderCubit: _sliderCubit),
         ),
         BlocProvider(
           create: (_) => CheckboxCubit(),
         ),
         BlocProvider(
-          create: (_) => SliderCubit(),
+          create: (_) => _sliderCubit,
         )
       ],
-      child: TimerView(),
+      child: const TimerView(),
     );
   }
 }
 
 class TimerView extends StatefulWidget {
-  TimerView({Key? key}) : super(key: key);
+  const TimerView({Key? key}) : super(key: key);
 
   @override
   State<TimerView> createState() => _TimerViewState();
@@ -40,7 +54,7 @@ class TimerView extends StatefulWidget {
 
 class _TimerViewState extends State<TimerView> {
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
-  double _currentSliderValue = 20;
+
 
   @override
   Widget build(BuildContext context) {
