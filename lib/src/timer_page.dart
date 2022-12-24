@@ -14,14 +14,13 @@ class TimerPage extends StatefulWidget {
 
   @override
   State<TimerPage> createState() => _TimerPageState();
-
 }
 
 class _TimerPageState extends State<TimerPage> {
   late SliderCubit _sliderCubit;
 
   @override
-  void initState(){
+  void initState() {
     _sliderCubit = SliderCubit();
     super.initState();
   }
@@ -31,7 +30,8 @@ class _TimerPageState extends State<TimerPage> {
     return MultiBlocProvider(
       providers: [
         BlocProvider(
-          create: (_) => TimerBloc(ticker: const Ticker(), sliderCubit: _sliderCubit),
+          create: (_) =>
+              TimerBloc(ticker: const Ticker(), sliderCubit: _sliderCubit),
         ),
         BlocProvider(
           create: (_) => CheckboxCubit(),
@@ -54,7 +54,6 @@ class TimerView extends StatefulWidget {
 
 class _TimerViewState extends State<TimerView> {
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
-
 
   @override
   Widget build(BuildContext context) {
@@ -83,9 +82,13 @@ class _TimerViewState extends State<TimerView> {
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: <Widget>[
-                const Padding(
+                Padding(
                   padding: EdgeInsets.symmetric(vertical: 100.0),
-                  child: Center(child: TimerText()),
+                  child: Center(child: BlocBuilder<TimerBloc, TimerState>(
+                    builder: (context, state) {
+                      return TimerText();
+                    },
+                  )),
                 ),
                 const actions.Actions(),
                 BlocBuilder<CheckboxCubit, CheckboxState>(
@@ -137,7 +140,7 @@ class TimerText extends StatelessWidget {
         ((duration / 60) % 60).floor().toString().padLeft(2, '0');
     final secondsStr = (duration % 60).floor().toString().padLeft(2, '0');
     return Text(
-      '$duration',
+      '$minutesStr:$secondsStr',
       style: Theme.of(context).textTheme.headline1,
     );
   }

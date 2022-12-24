@@ -1,3 +1,4 @@
+import 'package:an_exercise_timer/src/timer_bloc/timer_bloc.dart';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 
