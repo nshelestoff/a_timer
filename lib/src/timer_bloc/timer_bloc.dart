@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:an_exercise_timer/src/checkbox_bloc/checkbox_cubit.dart';
 import 'package:an_exercise_timer/src/slider_bloc/slider_cubit.dart';
 import 'package:an_exercise_timer/src/timer_page.dart';
 import 'package:bloc/bloc.dart';
@@ -11,8 +12,13 @@ part 'timer_event.dart';
 part 'timer_state.dart';
 
 class TimerBloc extends Bloc<TimerEvent, TimerState> {
-  TimerBloc({required Ticker ticker, required SliderCubit sliderCubit})
-      : _ticker = ticker, _sliderCubit = sliderCubit,
+  TimerBloc(
+      {required Ticker ticker,
+      required SliderCubit sliderCubit,
+      required CheckboxCubit checkboxCubit})
+      : _ticker = ticker,
+        _sliderCubit = sliderCubit,
+        _checkboxCubit = checkboxCubit,
         super(TimerInitial(_duration)) {
     on<TimerStarted>(_onStarted);
     on<TimerPaused>(_onPaused);
@@ -21,15 +27,19 @@ class TimerBloc extends Bloc<TimerEvent, TimerState> {
     on<_TimerTicked>(_onTicked);
     on<TimerUpdated>(_onUpdate);
 
-
     _sliderCubit.stream.listen((event) {
       _duration = _sliderCubit.state.value.round();
       add(TimerUpdated(_duration));
     });
 
+    _checkboxCubit.stream.listen((event) {
+      _duration = _checkboxCubit.state.isChecked ? 0 : _duration = _sliderCubit.state.value.round();
+      add(TimerUpdated(_duration));
+    });
   }
 
   final SliderCubit _sliderCubit;
+  final CheckboxCubit _checkboxCubit;
   final Ticker _ticker;
   static int _duration = 60;
 
@@ -53,14 +63,12 @@ class TimerBloc extends Bloc<TimerEvent, TimerState> {
             .listen((duration) => add(_TimerTicked(duration: duration)));
   }
 
-
   void _onPaused(TimerPaused event, Emitter<TimerState> emit) {
     if (state is TimerRunInProgress) {
       _tickerSubscription?.pause();
       emit(TimerRunPause(state.duration));
     }
   }
-
 
   void _onResumed(TimerResumed resume, Emitter<TimerState> emit) {
     if (state is TimerRunPause) {

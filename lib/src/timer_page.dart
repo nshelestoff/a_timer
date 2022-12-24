@@ -18,10 +18,12 @@ class TimerPage extends StatefulWidget {
 
 class _TimerPageState extends State<TimerPage> {
   late SliderCubit _sliderCubit;
+  late CheckboxCubit _checkboxCubit;
 
   @override
   void initState() {
     _sliderCubit = SliderCubit();
+    _checkboxCubit = CheckboxCubit();
     super.initState();
   }
 
@@ -31,10 +33,10 @@ class _TimerPageState extends State<TimerPage> {
       providers: [
         BlocProvider(
           create: (_) =>
-              TimerBloc(ticker: const Ticker(), sliderCubit: _sliderCubit),
+              TimerBloc(ticker: const Ticker(), sliderCubit: _sliderCubit, checkboxCubit: _checkboxCubit),
         ),
         BlocProvider(
-          create: (_) => CheckboxCubit(),
+          create: (_) => _checkboxCubit,
         ),
         BlocProvider(
           create: (_) => _sliderCubit,
@@ -58,23 +60,9 @@ class _TimerViewState extends State<TimerView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      primary: true,
-      appBar: AppBar(
-        title: const Text('Flutter Timer'),
-        leading: IconButton(
-          icon: const Icon(Icons.menu),
-          onPressed: () {
-            if (_scaffoldKey.currentState!.isDrawerOpen) {
-              Navigator.pop(context);
-            } else {
-              _scaffoldKey.currentState!.openDrawer();
-            }
-          },
-        ),
-      ),
-      body: Scaffold(
         key: _scaffoldKey,
-        drawer: const Drawer(),
+        appBar: AppBar(title: const Center(
+            child: Text('Timer app'))),
         body: Stack(
           children: [
             const Background(),
@@ -93,13 +81,17 @@ class _TimerViewState extends State<TimerView> {
                 const actions.Actions(),
                 BlocBuilder<CheckboxCubit, CheckboxState>(
                   builder: (context, state) {
-                    return Checkbox(
-                      value: state.isChecked,
-                      onChanged: (bool? value) {
-                        setState(() {
-                          context.read<CheckboxCubit>().changeValue(value!);
-                        });
-                      },
+                    return Container(
+                      width: 180,
+                      child: CheckboxListTile(
+                        value: state.isChecked,
+                        title: Text('counting up', style: Theme.of(context).textTheme.subtitle1,),
+                        onChanged: (bool? value) {
+                          setState(() {
+                            context.read<CheckboxCubit>().changeValue(value!);
+                          });
+                        },
+                      ),
                     );
                   },
                 ),
@@ -125,8 +117,7 @@ class _TimerViewState extends State<TimerView> {
             ),
           ],
         ),
-      ),
-    );
+      );
   }
 }
 

@@ -12,7 +12,8 @@ class App extends StatelessWidget {
       theme: ThemeData(
         primaryColor: const Color.fromRGBO(109, 234, 255, 1),
         colorScheme: const ColorScheme.light(
-          secondary: Color.fromRGBO(72, 74, 126, 1),
+          secondary: Color.fromRGBO(213, 206, 163, 1),
+
         ),
       ),
       home: const TimerPage(),
