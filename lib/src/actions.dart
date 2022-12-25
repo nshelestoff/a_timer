@@ -21,7 +21,7 @@ class Actions extends StatelessWidget {
                 child: const Icon(Icons.play_arrow),
                 onPressed: () => context
                     .read<TimerBloc>()
-                    .add(TimerStarted(duration: context.read<SliderCubit>().state.value.round(), incrementing: context.read<CheckboxCubit>().state.isChecked)),
+                    .add(TimerStarted(duration: context.read<TimerBloc>().state.duration.round(), incrementing: context.read<CheckboxCubit>().state.isChecked)),
               ),
             ],
             if (state is TimerRunInProgress) ...[
